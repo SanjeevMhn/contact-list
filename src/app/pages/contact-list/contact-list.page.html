@@ -1,0 +1,20 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Latest Contacts</h1>
+    <a class="btn" routerLink="/contacts/new">Add Contact</a>
+  </header>
+
+  @if (contacts().length === 0) {
+    <p class="empty">No contacts found. Add one to get started.</p>
+  } @else {
+    <ul class="list">
+      @for (contact of contacts(); track contact.id) {
+        <li>
+          <a class="contact-link" [routerLink]="['/contacts', contact.id]">
+            {{ contact.name }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>

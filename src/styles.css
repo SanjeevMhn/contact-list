@@ -1,3 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import 'ngx-toastr/toastr';
+
+:root {
+  --nb-bg: #ffe45e;
+  --nb-surface: #fffdf5;
+  --nb-ink: #111111;
+  --nb-blue: #4d7cff;
+  --nb-pink: #ff5d8f;
+  --nb-green: #35c26b;
+  --nb-red: #ff3b3b;
+  --nb-shadow: 6px 6px 0 #111111;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Trebuchet MS', 'Arial Black', Arial, sans-serif;
+  background:
+    linear-gradient(90deg, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+    var(--nb-bg);
+  background-size: 26px 26px;
+  color: var(--nb-ink);
+}
+
+a {
+  color: var(--nb-ink);
+}

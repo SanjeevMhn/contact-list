@@ -1,0 +1,42 @@
+<section class="page">
+  <header class="header">
+    <h1>Add Contact</h1>
+    <a routerLink="/contacts">Back to list</a>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <label>
+      Name
+      <input type="text" formControlName="name" [class.input-error]="hasError('name')" />
+      @if (hasError('name')) {
+        <span class="error-message">{{ getErrorMessage('name') }}</span>
+      }
+    </label>
+
+    <label>
+      Mobile
+      <input type="text" formControlName="mobile" [class.input-error]="hasError('mobile')" />
+      @if (hasError('mobile')) {
+        <span class="error-message">{{ getErrorMessage('mobile') }}</span>
+      }
+    </label>
+
+    <label>
+      Email
+      <input type="email" formControlName="email" [class.input-error]="hasError('email')" />
+      @if (hasError('email')) {
+        <span class="error-message">{{ getErrorMessage('email') }}</span>
+      }
+    </label>
+
+    <label>
+      Other ID
+      <input type="text" formControlName="otherId" [class.input-error]="hasError('otherId')" />
+      @if (hasError('otherId')) {
+        <span class="error-message">{{ getErrorMessage('otherId') }}</span>
+      }
+    </label>
+
+    <button type="submit" class="primary-btn">Save Contact</button>
+  </form>
+</section>
