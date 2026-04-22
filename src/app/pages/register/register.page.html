@@ -1,0 +1,42 @@
+<section class="page">
+  <header class="header">
+    <h1>Join QuickFox</h1>
+    <a routerLink="/login">Back to login</a>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="register()" class="form">
+    <label>
+      Full Name
+      <input type="text" formControlName="name" [class.input-error]="hasError('name')" />
+      @if (hasError('name')) {
+        <span class="error-message">{{ getErrorMessage('name') }}</span>
+      }
+    </label>
+
+    <label>
+      Email
+      <input type="email" formControlName="email" [class.input-error]="hasError('email')" />
+      @if (hasError('email')) {
+        <span class="error-message">{{ getErrorMessage('email') }}</span>
+      }
+    </label>
+
+    <label>
+      Password
+      <input type="password" formControlName="password" [class.input-error]="hasError('password')" />
+      @if (hasError('password')) {
+        <span class="error-message">{{ getErrorMessage('password') }}</span>
+      }
+    </label>
+
+    <label>
+      Confirm Password
+      <input type="password" formControlName="confirmPassword" [class.input-error]="hasError('confirmPassword')" />
+      @if (hasError('confirmPassword')) {
+        <span class="error-message">{{ getErrorMessage('confirmPassword') }}</span>
+      }
+    </label>
+
+    <button type="submit" class="primary-btn">Create Account</button>
+  </form>
+</section>
