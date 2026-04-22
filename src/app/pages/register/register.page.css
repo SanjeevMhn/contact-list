@@ -1,0 +1,121 @@
+/* Neo-brutalism design for register page */
+:host {
+  display: block;
+}
+
+.page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border: 3px solid var(--nb-ink);
+  background: var(--nb-surface);
+  padding: 1rem;
+  box-shadow: var(--nb-shadow);
+}
+
+h1 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 1.5rem;
+}
+
+.header a {
+  font-weight: 700;
+  text-decoration: underline;
+  color: var(--nb-ink);
+  cursor: pointer;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  border: 3px solid var(--nb-ink);
+  background: #ffffff;
+  padding: 1rem;
+  box-shadow: var(--nb-shadow);
+  transform: rotate(-0.35deg);
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+input {
+  border: 3px solid var(--nb-ink);
+  padding: 0.55rem 0.7rem;
+  background: var(--nb-surface);
+  font-size: 1rem;
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--nb-ink);
+}
+
+input.input-error {
+  border-color: var(--nb-red);
+  background: #ffe6e6;
+}
+
+input.input-error:focus {
+  outline: 2px solid rgba(255, 59, 59, 0.35);
+  outline-offset: 1px;
+}
+
+.error-message {
+  color: var(--nb-red);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+button {
+  width: fit-content;
+  border: 3px solid var(--nb-ink);
+  padding: 0.6rem 1rem;
+  background: var(--nb-green);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.primary-btn {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--nb-green),
+    var(--nb-green) 10px,
+    #2aad5e 10px,
+    #2aad5e 20px
+  );
+}
+
+button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--nb-ink);
+}
+
+button:active {
+  box-shadow: 2px 2px 0 var(--nb-ink);
+  transform: translate(2px, 2px);
+}
