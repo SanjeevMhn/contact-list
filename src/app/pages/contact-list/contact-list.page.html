@@ -3,12 +3,23 @@
     <h1>Latest Contacts</h1>
     <a class="btn" routerLink="/contacts/new">Add Contact</a>
   </header>
+  
+  <div class="search-container">
+    <label for="search-input" class="search-label">Search Contacts</label>
+    <input 
+      id="search-input" 
+      type="text" 
+      placeholder="Search by name, mobile, email, or ID..."
+      (input)="setSearchTerm($event.target.value)"
+      class="search-input"
+    />
+  </div>
 
-  @if (contacts().length === 0) {
-    <p class="empty">No contacts found. Add one to get started.</p>
+  @if (filteredContacts().length === 0) {
+    <p class="empty">No contacts found matching your search.</p>
   } @else {
     <ul class="list">
-      @for (contact of contacts(); track contact.id) {
+      @for (contact of filteredContacts(); track contact.id) {
         <li>
           <a class="contact-link" [routerLink]="['/contacts', contact.id]">
             {{ contact.name }}

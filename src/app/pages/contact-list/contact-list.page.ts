@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ContactsService } from '../../services/contacts.service';
@@ -11,6 +11,26 @@ import { ContactsService } from '../../services/contacts.service';
 })
 export class ContactListPage {
   private readonly contactsService = inject(ContactsService);
+  private readonly searchTerm = signal('');
 
   protected readonly contacts = computed(() => this.contactsService.getLatestContacts());
+  protected readonly filteredContacts = computed(() => {
+    const contacts = this.contacts();
+    const search = this.searchTerm().toLowerCase().trim();
+    
+    if (!search) {
+      return contacts;
+    }
+    
+    return contacts.filter(contact => 
+      contact.name.toLowerCase().includes(search) ||
+      contact.mobile.toLowerCase().includes(search) ||
+      contact.email.toLowerCase().includes(search) ||
+      contact.otherId.toLowerCase().includes(search)
+    );
+  });
+
+  setSearchTerm(term: string): void {
+    this.searchTerm.set(term);
+  }
 }
