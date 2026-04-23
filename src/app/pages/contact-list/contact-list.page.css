@@ -4,6 +4,33 @@
   padding: 2rem 1rem;
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--nb-blue);
+  color: #ffffff;
+  text-decoration: none;
+  border: 3px solid var(--nb-ink);
+  padding: 0.55rem 0.9rem;
+  font-weight: 700;
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  font-family: 'Trebuchet MS', 'Arial Black', Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.sort-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--nb-ink);
+}
+
 .search-container {
   margin-bottom: 1.5rem;
   display: flex;

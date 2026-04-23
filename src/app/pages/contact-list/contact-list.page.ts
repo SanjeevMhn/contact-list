@@ -12,6 +12,7 @@ import { ContactsService } from '../../services/contacts.service';
 export class ContactListPage {
   private readonly contactsService = inject(ContactsService);
   private readonly searchTerm = signal('');
+  private readonly sortAscending = signal<boolean>(true);
 
   protected readonly contacts = computed(() => this.contactsService.getLatestContacts());
   protected readonly filteredContacts = computed(() => {
@@ -30,7 +31,29 @@ export class ContactListPage {
     );
   });
 
+  protected readonly sortedContacts = computed(() => {
+    const contacts = this.filteredContacts();
+    return [...contacts].sort((a, b) => {
+      const dateA = Date.parse(a.updatedAt);
+      const dateB = Date.parse(b.updatedAt);
+      
+      if (this.sortAscending()) {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+  });
+
   setSearchTerm(term: string): void {
     this.searchTerm.set(term);
+  }
+
+  toggleSort(): void {
+    this.sortAscending.set(!this.sortAscending());
+  }
+
+  getSortIndicator(): string {
+    return this.sortAscending() ? '↑' : '↓';
   }
 }
