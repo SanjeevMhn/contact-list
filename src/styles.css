@@ -4,14 +4,15 @@
 @import 'ngx-toastr/toastr';
 
 :root {
-  --nb-bg: #ffe45e;
-  --nb-surface: #fffdf5;
-  --nb-ink: #111111;
-  --nb-blue: #4d7cff;
-  --nb-pink: #ff5d8f;
-  --nb-green: #35c26b;
-  --nb-red: #ff3b3b;
-  --nb-shadow: 6px 6px 0 #111111;
+  --gs-bg: rgba(255, 255, 255, 0.1);
+  --gs-surface: rgba(255, 255, 255, 0.05);
+  --gs-ink: #ffffff;
+  --gs-blue: rgba(77, 124, 255, 0.7);
+  --gs-pink: rgba(255, 93, 143, 0.7);
+  --gs-green: rgba(53, 194, 107, 0.7);
+  --gs-red: rgba(255, 59, 59, 0.7);
+  --gs-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --gs-border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 * {
@@ -20,15 +21,13 @@
 
 body {
   margin: 0;
-  font-family: 'Trebuchet MS', 'Arial Black', Arial, sans-serif;
-  background:
-    linear-gradient(90deg, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(17, 17, 17, 0.05) 1px, transparent 1px),
-    var(--nb-bg);
-  background-size: 26px 26px;
-  color: var(--nb-ink);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--gs-bg);
+  backdrop-filter: blur(10px);
+  color: var(--gs-ink);
+  min-height: 100vh;
 }
 
 a {
-  color: var(--nb-ink);
+  color: var(--gs-ink);
 }
