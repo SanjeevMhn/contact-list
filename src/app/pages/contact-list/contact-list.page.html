@@ -5,7 +5,12 @@
       <button class="btn sort-btn" (click)="toggleSort()">
         Sort {{ getSortIndicator() }}
       </button>
+      <div class="header-actions">
       <a class="btn" routerLink="/contacts/new">Add Contact</a>
+    </div>
+      <button class="tab-btn" (click)="toggleFavoritesView()" [class.active]="showFavoritesOnly()">
+        {{ showFavoritesOnly() ? 'Show All' : 'Show Favorites' }}
+      </button>
     </div>
   </header>
   
@@ -20,17 +25,22 @@
     />
   </div>
 
-  @if (filteredContacts().length === 0) {
-    <p class="empty">No contacts found matching your search.</p>
-  } @else {
-    <ul class="list">
-      @for (contact of sortedContacts(); track contact.id) {
-        <li>
-          <a class="contact-link" [routerLink]="['/contacts', contact.id]">
-            {{ contact.name }}
-          </a>
-        </li>
-      }
-    </ul>
-  }
+   @if (filteredContacts().length === 0) {
+     <p class="empty">No contacts found matching your search.</p>
+   } @else {
+     <ul class="list">
+       @for (contact of sortedContacts(); track contact.id) {
+         <li class="contact-item">
+           <div class="contact-content">
+             <span class="favorite-icon" (click)="toggleFavorite(contact)" [class.active]="contact.favorite">
+               ★
+             </span>
+             <a class="contact-link" [routerLink]="['/contacts', contact.id]">
+               {{ contact.name }}
+             </a>
+           </div>
+         </li>
+       }
+     </ul>
+   }
 </section>

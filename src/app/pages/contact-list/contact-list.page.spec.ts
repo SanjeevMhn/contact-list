@@ -1,23 +1,33 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { signal } from '@angular/core';
 import { vi } from 'vitest';
 
 import { ContactListPage } from './contact-list.page';
 import { ContactsService } from '../../services/contacts.service';
+import { ToastrService } from 'ngx-toastr';
+import { Contact } from '../../models/contact.model';
 
 describe('ContactListPage', () => {
   const contactsServiceMock = {
-    getLatestContacts: vi.fn()
+    latestContacts: signal<Contact[]>([]),
+    toggleFavorite: vi.fn()
+  };
+  const toastrMock = {
+    success: vi.fn()
   };
 
   beforeEach(async () => {
-    contactsServiceMock.getLatestContacts.mockReset();
+    contactsServiceMock.latestContacts = signal<Contact[]>([]);
+    contactsServiceMock.toggleFavorite.mockReset();
+    toastrMock.success.mockReset();
 
     await TestBed.configureTestingModule({
       imports: [ContactListPage],
       providers: [
         provideRouter([]),
-        { provide: ContactsService, useValue: contactsServiceMock }
+        { provide: ContactsService, useValue: contactsServiceMock },
+        { provide: ToastrService, useValue: toastrMock }
       ]
     }).compileComponents();
   });
@@ -49,58 +59,84 @@ describe('ContactListPage', () => {
     expect(component.getSortIndicator()).toBe('↑');
   });
 
-  it('should return contacts sorted by updatedAt in ascending order by default', () => {
-    const now = new Date();
-    contactsServiceMock.getLatestContacts.mockReturnValue([
-      {
-        id: '1',
-        name: 'Oldest Contact',
-        mobile: '111',
-        email: 'oldest@example.com',
-        otherId: 'oldest_1',
-        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
-      },
-      {
-        id: '2',
-        name: 'Newest Contact',
-        mobile: '222',
-        email: 'newest@example.com',
-        otherId: 'newest_2',
-        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
-      },
-      {
-        id: '3',
-        name: 'Middle Contact',
-        mobile: '333',
-        email: 'middle@example.com',
-        otherId: 'middle_3',
-        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
-      }
-    ]);
+   it('should return contacts sorted by updatedAt in ascending order by default', () => {
+     const now = new Date();
+     contactsServiceMock.latestContacts.set([
+       {
+         id: '1',
+         name: 'Oldest Contact',
+         mobile: '111',
+         email: 'oldest@example.com',
+         otherId: 'oldest_id',
+         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+         updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+         favorite: false
+       },
+       {
+         id: '2',
+         name: 'Newest Contact',
+         mobile: '222',
+         email: 'newest@example.com',
+         otherId: 'newest_id',
+         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+         updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+         favorite: false
+       }
+     ] as Contact[]);
 
-    const fixture = TestBed.createComponent(ContactListPage);
-    fixture.detectChanges();
+     const fixture = TestBed.createComponent(ContactListPage);
+     fixture.detectChanges();
 
-    // Access the sortedContacts signal through the component
-    const component = fixture.componentInstance;
-    const sortedContacts = component['sortedContacts']();
+     const element = fixture.nativeElement as HTMLElement;
+     expect(element.querySelectorAll('.contact-link').length).toBe(2);
+     // First contact should be the oldest (since we're sorting ascending)
+     expect(element.querySelectorAll('.contact-link')[0]?.textContent).toContain('Oldest Contact');
+     expect(element.querySelectorAll('.contact-link')[1]?.textContent).toContain('Newest Contact');
+   });
 
-    expect(sortedContacts.length).toBe(3);
-    // Should be ordered: oldest (3 days ago), middle (2 days ago), newest (1 day ago)
-    expect(sortedContacts[0].id).toBe('1');
-    expect(sortedContacts[0].name).toBe('Oldest Contact');
-    expect(sortedContacts[1].id).toBe('3');
-    expect(sortedContacts[1].name).toBe('Middle Contact');
-    expect(sortedContacts[2].id).toBe('2');
-    expect(sortedContacts[2].name).toBe('Newest Contact');
-  });
+   it('should sort contacts in descending order when toggled', () => {
+     const now = new Date();
+     contactsServiceMock.latestContacts.set([
+       {
+         id: '1',
+         name: 'Oldest Contact',
+         mobile: '111',
+         email: 'oldest@example.com',
+         otherId: 'oldest_id',
+         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+         updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+         favorite: false
+       },
+       {
+         id: '2',
+         name: 'Newest Contact',
+         mobile: '222',
+         email: 'newest@example.com',
+         otherId: 'newest_id',
+         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+         updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+         favorite: false
+       }
+     ] as Contact[]);
+
+     const fixture = TestBed.createComponent(ContactListPage);
+     fixture.detectChanges();
+
+     // Click to toggle sort
+     const sortButton = fixture.nativeElement.querySelector('.sort-btn') as HTMLElement;
+     sortButton.click();
+     fixture.detectChanges();
+
+     const element = fixture.nativeElement as HTMLElement;
+     expect(element.querySelectorAll('.contact-link').length).toBe(2);
+     // First contact should now be the newest (since we're sorting descending)
+     expect(element.querySelectorAll('.contact-link')[0]?.textContent).toContain('Newest Contact');
+     expect(element.querySelectorAll('.contact-link')[1]?.textContent).toContain('Oldest Contact');
+   });
 
   it('should return contacts sorted by updatedAt in descending order when toggled', () => {
     const now = new Date();
-    contactsServiceMock.getLatestContacts.mockReturnValue([
+    contactsServiceMock.latestContacts.set([
       {
         id: '1',
         name: 'Oldest Contact',
@@ -108,7 +144,8 @@ describe('ContactListPage', () => {
         email: 'oldest@example.com',
         otherId: 'oldest_1',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+        favorite: false
       },
       {
         id: '2',
@@ -117,7 +154,8 @@ describe('ContactListPage', () => {
         email: 'newest@example.com',
         otherId: 'newest_2',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+        favorite: false
       },
       {
         id: '3',
@@ -126,7 +164,8 @@ describe('ContactListPage', () => {
         email: 'middle@example.com',
         otherId: 'middle_3',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+        favorite: false
       }
     ]);
 
@@ -152,7 +191,7 @@ describe('ContactListPage', () => {
 
   it('should maintain sort order when filtering contacts', () => {
     const now = new Date();
-    contactsServiceMock.getLatestContacts.mockReturnValue([
+    contactsServiceMock.latestContacts.set([
       {
         id: '1',
         name: 'Alice Smith',
@@ -160,7 +199,8 @@ describe('ContactListPage', () => {
         email: 'alice@example.com',
         otherId: 'alice_1',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(),
+        favorite: false
       },
       {
         id: '2',
@@ -169,7 +209,8 @@ describe('ContactListPage', () => {
         email: 'bob@example.com',
         otherId: 'bob_2',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+        favorite: false
       },
       {
         id: '3',
@@ -178,7 +219,8 @@ describe('ContactListPage', () => {
         email: 'charlie@example.com',
         otherId: 'charlie_3',
         createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
-        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(),
+        favorite: false
       }
     ]);
 

@@ -6,6 +6,7 @@ export interface Contact {
   otherId: string;
   createdAt: string;
   updatedAt: string;
+  favorite: boolean;
 }
 
 export type ContactInput = Pick<Contact, 'name' | 'mobile' | 'email' | 'otherId'>;
