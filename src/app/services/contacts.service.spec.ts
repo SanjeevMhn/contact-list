@@ -123,4 +123,95 @@ describe('ContactsService', () => {
     expect(deletedMissing).toBe(false);
     expect(getStoredContacts().length).toBe(0);
   });
+
+  it('returns contacts sorted by updatedAt in descending order (newest first)', () => {
+    const now = new Date();
+    setStoredContacts([
+      {
+        id: '1',
+        name: 'Oldest Contact',
+        mobile: '111',
+        email: 'oldest@example.com',
+        otherId: 'oldest_1',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
+      },
+      {
+        id: '2',
+        name: 'Newest Contact',
+        mobile: '222',
+        email: 'newest@example.com',
+        otherId: 'newest_2',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
+      },
+      {
+        id: '3',
+        name: 'Middle Contact',
+        mobile: '333',
+        email: 'middle@example.com',
+        otherId: 'middle_3',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
+      }
+    ]);
+
+    const service = new ContactsService();
+    const contacts = service.getLatestContacts();
+
+    expect(contacts.length).toBe(3);
+    // Should be ordered: newest (1 day ago), middle (2 days ago), oldest (3 days ago)
+    expect(contacts[0].id).toBe('2');
+    expect(contacts[0].name).toBe('Newest Contact');
+    expect(contacts[1].id).toBe('3');
+    expect(contacts[1].name).toBe('Middle Contact');
+    expect(contacts[2].id).toBe('1');
+    expect(contacts[2].name).toBe('Oldest Contact');
+  });
+
+  it('maintains original order for contacts with identical updatedAt timestamps', () => {
+    const timestamp = new Date().toISOString();
+    setStoredContacts([
+      {
+        id: '1',
+        name: 'First Contact',
+        mobile: '111',
+        email: 'first@example.com',
+        otherId: 'first_1',
+        createdAt: timestamp,
+        updatedAt: timestamp
+      },
+      {
+        id: '2',
+        name: 'Second Contact',
+        mobile: '222',
+        email: 'second@example.com',
+        otherId: 'second_2',
+        createdAt: timestamp,
+        updatedAt: timestamp
+      },
+      {
+        id: '3',
+        name: 'Third Contact',
+        mobile: '333',
+        email: 'third@example.com',
+        otherId: 'third_3',
+        createdAt: timestamp,
+        updatedAt: timestamp
+      }
+    ]);
+
+    const service = new ContactsService();
+    const contacts = service.getLatestContacts();
+
+    expect(contacts.length).toBe(3);
+    // With identical timestamps, sort should be unstable but we expect original order to be maintained
+    // (though not guaranteed by JS sort, Array.sort is stable in modern browsers)
+    expect(contacts[0].id).toBe('1');
+    expect(contacts[0].name).toBe('First Contact');
+    expect(contacts[1].id).toBe('2');
+    expect(contacts[1].name).toBe('Second Contact');
+    expect(contacts[2].id).toBe('3');
+    expect(contacts[2].name).toBe('Third Contact');
+  });
 });

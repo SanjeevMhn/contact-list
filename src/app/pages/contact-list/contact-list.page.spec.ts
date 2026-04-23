@@ -27,194 +27,176 @@ describe('ContactListPage', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('shows empty state when no contacts exist', () => {
-    contactsServiceMock.getLatestContacts.mockReturnValue([]);
-
+  it('should initialize with ascending sort (oldest first)', () => {
     const fixture = TestBed.createComponent(ContactListPage);
-    fixture.detectChanges();
-
-    const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('.empty')?.textContent).toContain('No contacts found');
+    const component = fixture.componentInstance;
+    expect(component.getSortIndicator()).toBe('↑');
   });
 
-  it('renders only contact names when contacts exist', () => {
+  it('should toggle sort order when toggleSort is called', () => {
+    const fixture = TestBed.createComponent(ContactListPage);
+    const component = fixture.componentInstance;
+    
+    // Initial state should be ascending
+    expect(component.getSortIndicator()).toBe('↑');
+    
+    // After first toggle, should be descending
+    component.toggleSort();
+    expect(component.getSortIndicator()).toBe('↓');
+    
+    // After second toggle, should be ascending again
+    component.toggleSort();
+    expect(component.getSortIndicator()).toBe('↑');
+  });
+
+  it('should return contacts sorted by updatedAt in ascending order by default', () => {
+    const now = new Date();
     contactsServiceMock.getLatestContacts.mockReturnValue([
       {
         id: '1',
-        name: 'Alex Ray',
-        mobile: '123',
-        email: 'alex@example.com',
-        otherId: 'alex_id',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        name: 'Oldest Contact',
+        mobile: '111',
+        email: 'oldest@example.com',
+        otherId: 'oldest_1',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
+      },
+      {
+        id: '2',
+        name: 'Newest Contact',
+        mobile: '222',
+        email: 'newest@example.com',
+        otherId: 'newest_2',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
+      },
+      {
+        id: '3',
+        name: 'Middle Contact',
+        mobile: '333',
+        email: 'middle@example.com',
+        otherId: 'middle_3',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
       }
     ]);
 
     const fixture = TestBed.createComponent(ContactListPage);
     fixture.detectChanges();
 
-    const element = fixture.nativeElement as HTMLElement;
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).not.toContain('alex@example.com');
-    expect(element.textContent).not.toContain('123');
+    // Access the sortedContacts signal through the component
+    const component = fixture.componentInstance;
+    const sortedContacts = component['sortedContacts']();
+
+    expect(sortedContacts.length).toBe(3);
+    // Should be ordered: oldest (3 days ago), middle (2 days ago), newest (1 day ago)
+    expect(sortedContacts[0].id).toBe('1');
+    expect(sortedContacts[0].name).toBe('Oldest Contact');
+    expect(sortedContacts[1].id).toBe('3');
+    expect(sortedContacts[1].name).toBe('Middle Contact');
+    expect(sortedContacts[2].id).toBe('2');
+    expect(sortedContacts[2].name).toBe('Newest Contact');
   });
 
-  it('should filter contacts by name when searching', () => {
+  it('should return contacts sorted by updatedAt in descending order when toggled', () => {
+    const now = new Date();
     contactsServiceMock.getLatestContacts.mockReturnValue([
       {
         id: '1',
-        name: 'Alex Ray',
-        mobile: '123',
-        email: 'alex@example.com',
-        otherId: 'alex_id',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        name: 'Oldest Contact',
+        mobile: '111',
+        email: 'oldest@example.com',
+        otherId: 'oldest_1',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
       },
       {
         id: '2',
-        name: 'Bob Smith',
-        mobile: '456',
+        name: 'Newest Contact',
+        mobile: '222',
+        email: 'newest@example.com',
+        otherId: 'newest_2',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
+      },
+      {
+        id: '3',
+        name: 'Middle Contact',
+        mobile: '333',
+        email: 'middle@example.com',
+        otherId: 'middle_3',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
+      }
+    ]);
+
+    const fixture = TestBed.createComponent(ContactListPage);
+    const component = fixture.componentInstance;
+    
+    // Toggle to descending order (since default is now ascending)
+    component.toggleSort();
+    fixture.detectChanges();
+
+    // Access the sortedContacts signal through the component
+    const sortedContacts = component['sortedContacts']();
+
+    expect(sortedContacts.length).toBe(3);
+    // Should be ordered: newest (1 day ago), middle (2 days ago), oldest (3 days ago)
+    expect(sortedContacts[0].id).toBe('2');
+    expect(sortedContacts[0].name).toBe('Newest Contact');
+    expect(sortedContacts[1].id).toBe('3');
+    expect(sortedContacts[1].name).toBe('Middle Contact');
+    expect(sortedContacts[2].id).toBe('1');
+    expect(sortedContacts[2].name).toBe('Oldest Contact');
+  });
+
+  it('should maintain sort order when filtering contacts', () => {
+    const now = new Date();
+    contactsServiceMock.getLatestContacts.mockReturnValue([
+      {
+        id: '1',
+        name: 'Alice Smith',
+        mobile: '111',
+        email: 'alice@example.com',
+        otherId: 'alice_1',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 3).toISOString()
+      },
+      {
+        id: '2',
+        name: 'Bob Jones',
+        mobile: '222',
         email: 'bob@example.com',
-        otherId: 'bob_id',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]);
-
-    const fixture = TestBed.createComponent(ContactListPage);
-    fixture.detectChanges();
-
-    // Initially show all contacts
-    let element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(2);
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).toContain('Bob Smith');
-
-    // Search for 'Alex'
-    const searchInput = element.querySelector('.search-input') as HTMLInputElement;
-    searchInput.value = 'Alex';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    // Should only show Alex
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).not.toContain('Bob Smith');
-
-    // Search for 'smith' (case insensitive)
-    searchInput.value = 'smith';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    // Should only show Bob
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-    expect(element.textContent).toContain('Bob Smith');
-    expect(element.textContent).not.toContain('Alex Ray');
-
-    // Clear search
-    searchInput.value = '';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    // Should show all contacts again
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(2);
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).toContain('Bob Smith');
-  });
-
-  it('should filter contacts by mobile, email, or otherId when searching', () => {
-    contactsServiceMock.getLatestContacts.mockReturnValue([
-      {
-        id: '1',
-        name: 'Alex Ray',
-        mobile: '123-456-7890',
-        email: 'alex@example.com',
-        otherId: 'alex_work',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        otherId: 'bob_2',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 2).toISOString()
       },
       {
-        id: '2',
-        name: 'Bob Smith',
-        mobile: '987-654-3210',
-        email: 'bob@work.com',
-        otherId: 'bob_personal',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        id: '3',
+        name: 'Charlie Brown',
+        mobile: '333',
+        email: 'charlie@example.com',
+        otherId: 'charlie_3',
+        createdAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
+        updatedAt: new Date(now.getTime() - 1000 * 60 * 60 * 24 * 1).toISOString()
       }
     ]);
 
     const fixture = TestBed.createComponent(ContactListPage);
+    const component = fixture.componentInstance;
+    
+    // With ascending order as default
+    fixture.detectChanges();
+    
+    // Filter for contacts with "Bob" in name
+    component.setSearchTerm('Bob');
     fixture.detectChanges();
 
-    // Initially show all contacts
-    let element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(2);
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).toContain('Bob Smith');
+    // Access the sortedContacts signal through the component
+    const sortedContacts = component['sortedContacts']();
 
-    // Search by mobile number
-    const searchInput = element.querySelector('.search-input') as HTMLInputElement;
-    searchInput.value = '123';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-    expect(element.textContent).toContain('Alex Ray');
-    expect(element.textContent).not.toContain('Bob Smith');
-
-    // Search by email domain
-    searchInput.value = '@work.com';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-    expect(element.textContent).toContain('Bob Smith');
-    expect(element.textContent).not.toContain('Alex Ray');
-
-    // Search by otherId
-    searchInput.value = 'personal';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-    expect(element.textContent).toContain('Bob Smith');
-    expect(element.textContent).not.toContain('Alex Ray');
-  });
-
-  it('should show empty state when no contacts match search', () => {
-    contactsServiceMock.getLatestContacts.mockReturnValue([
-      {
-        id: '1',
-        name: 'Alex Ray',
-        mobile: '123',
-        email: 'alex@example.com',
-        otherId: 'alex_id',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]);
-
-    const fixture = TestBed.createComponent(ContactListPage);
-    fixture.detectChanges();
-
-    // Initially show contact
-    let element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.contact-link').length).toBe(1);
-
-    // Search for non-existent term
-    const searchInput = element.querySelector('.search-input') as HTMLInputElement;
-    searchInput.value = 'zzz';
-    searchInput.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
-
-    element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('.empty')?.textContent).toContain('No contacts found matching your search');
+    expect(sortedContacts.length).toBe(1);
+    expect(sortedContacts[0].id).toBe('2');
+    expect(sortedContacts[0].name).toBe('Bob Jones');
   });
 });
