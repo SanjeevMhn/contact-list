@@ -1,149 +1,145 @@
-/* Neo-brutalism design for login page */
+/* Glassmorphism design for login page */
 :host {
   display: block;
 }
 
 .page {
   max-width: 500px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--gs-surface);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: var(--gs-border);
+  box-shadow: var(--gs-shadow);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  border: 3px solid var(--nb-ink);
-  background: var(--nb-surface);
-  padding: 1rem;
-  box-shadow: var(--nb-shadow);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h1 {
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 .header a {
-  font-weight: 700;
-  text-decoration: underline;
-  color: var(--nb-ink);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--gs-ink);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.header a:hover {
+  opacity: 1;
 }
 
 .form {
   display: grid;
-  gap: 1rem;
-  border: 3px solid var(--nb-ink);
-  background: #ffffff;
-  padding: 1rem;
-  box-shadow: var(--nb-shadow);
-  transform: rotate(-0.35deg);
+  gap: 1.5rem;
 }
 
 label {
   display: grid;
-  gap: 0.35rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.3px;
 }
 
 input {
-  border: 3px solid var(--nb-ink);
-  padding: 0.55rem 0.7rem;
-  background: var(--nb-surface);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
   font-size: 1rem;
-  box-shadow: 3px 3px 0 var(--nb-ink);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  border-radius: 12px;
+  color: var(--gs-ink);
+  transition: all 0.3s ease;
   width: 100%;
   box-sizing: border-box;
 }
 
 input:focus {
   outline: none;
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--nb-ink);
+  border-color: var(--gs-blue);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(77, 124, 255, 0.2);
 }
 
 input.input-error {
-  border-color: var(--nb-red);
-  background: #ffe6e6;
+  border-color: var(--gs-red);
+  background: rgba(255, 59, 59, 0.1);
 }
 
 input.input-error:focus {
-  outline: 2px solid rgba(255, 59, 59, 0.35);
-  outline-offset: 1px;
+  outline: 2px solid rgba(255, 59, 59, 0.2);
+  outline-offset: 2px;
 }
 
 .error-message {
-  color: var(--nb-red);
-  font-size: 0.85rem;
-  font-weight: 700;
+  color: var(--gs-red);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 button {
-  width: fit-content;
-  border: 3px solid var(--nb-ink);
-  padding: 0.6rem 1rem;
-  background: var(--nb-green);
-  color: #fff;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--gs-blue);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  box-shadow: 4px 4px 0 var(--nb-ink);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.primary-btn {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--nb-green),
-    var(--nb-green) 10px,
-    #2aad5e 10px,
-    #2aad5e 20px
-  );
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--nb-ink);
+  background: rgba(77, 124, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 button:active {
-  box-shadow: 2px 2px 0 var(--nb-ink);
-  transform: translate(2px, 2px);
+  transform: translateY(0);
 }
 
 .guest-login {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   text-align: center;
 }
 
 .guest-btn {
-  border: 3px solid var(--nb-ink);
-  background: var(--nb-surface);
-  color: var(--nb-ink);
-  box-shadow: 4px 4px 0 var(--nb-ink);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.6rem 1.5rem;
   width: 100%;
-  box-sizing: border-box;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--gs-ink);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
 .guest-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--nb-ink);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 .guest-btn:active {
-  box-shadow: 2px 2px 0 var(--nb-ink);
-  transform: translate(2px, 2px);
+  transform: translateY(0);
 }
