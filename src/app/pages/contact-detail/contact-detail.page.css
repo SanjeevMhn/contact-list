@@ -1,157 +1,137 @@
 .page {
   max-width: 700px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: var(--gs-surface);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: var(--gs-border);
-  box-shadow: var(--gs-shadow);
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+  border: 3px solid var(--nb-ink);
+  background: var(--nb-surface);
+  padding: 1rem;
+  box-shadow: var(--nb-shadow);
 }
 
 h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .header a {
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--gs-ink);
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.header a:hover {
-  opacity: 1;
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 .detail,
 .form {
-  background: var(--gs-surface);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  border: var(--gs-border);
-  padding: 1.5rem;
-  box-shadow: var(--gs-shadow);
+  border: 3px solid var(--nb-ink);
+  padding: 1rem;
+  background: #ffffff;
+  box-shadow: var(--nb-shadow);
 }
 
 .detail p {
   margin: 0.5rem 0;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .form {
   display: grid;
   gap: 1rem;
+  transform: rotate(0.35deg);
 }
 
 label {
   display: grid;
-  gap: 0.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: -0.3px;
+  gap: 0.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
 }
 
 input {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(5px);
-  font-size: 1rem;
-  border-radius: 12px;
-  color: var(--gs-ink);
-  transition: all 0.3s ease;
+  border: 3px solid var(--nb-ink);
+  padding: 0.55rem 0.7rem;
+  background: var(--nb-surface);
+  box-shadow: 3px 3px 0 var(--nb-ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 input:focus {
   outline: none;
-  border-color: var(--gs-blue);
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 3px rgba(77, 124, 255, 0.2);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--nb-ink);
 }
 
 input.input-error {
-  border-color: var(--gs-red);
-  background: rgba(255, 59, 59, 0.1);
+  border-color: var(--nb-red);
+  background: #ffe6e6;
 }
 
 input.input-error:focus {
-  outline: 2px solid rgba(255, 59, 59, 0.2);
-  outline-offset: 2px;
+  outline: 2px solid rgba(255, 59, 59, 0.35);
+  outline-offset: 1px;
 }
 
 .error-message {
-  color: var(--gs-red);
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: var(--nb-red);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .actions {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 button {
-  padding: 0.75rem 1.5rem;
-  background: var(--gs-blue);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  border: 3px solid var(--nb-ink);
+  padding: 0.6rem 1rem;
+  color: #fff;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 4px 4px 0 var(--nb-ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 button:hover {
-  background: rgba(77, 124, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--nb-ink);
 }
 
 button:active {
-  transform: translateY(0);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--nb-ink);
 }
 
 .edit {
   background: repeating-linear-gradient(
     -45deg,
-    rgba(77, 124, 255, 0.7),
-    rgba(77, 124, 255, 0.7) 10px,
-    rgba(60, 99, 207, 0.7) 10px,
-    rgba(60, 99, 207, 0.7) 20px
+    var(--nb-blue),
+    var(--nb-blue) 10px,
+    #3c63cf 10px,
+    #3c63cf 20px
   );
-  backdrop-filter: blur(5px);
 }
 
 .delete {
   background: repeating-linear-gradient(
     -45deg,
-    rgba(255, 59, 59, 0.7),
-    rgba(255, 59, 59, 0.7) 10px,
-    rgba(210, 43, 43, 0.7) 10px,
-    rgba(210, 43, 43, 0.7) 20px
+    var(--nb-red),
+    var(--nb-red) 10px,
+    #d22b2b 10px,
+    #d22b2b 20px
   );
-  backdrop-filter: blur(5px);
 }
 
 .cancel {
-  background: rgba(255, 93, 143, 0.7);
-  backdrop-filter: blur(5px);
+  background: var(--nb-pink);
 }
