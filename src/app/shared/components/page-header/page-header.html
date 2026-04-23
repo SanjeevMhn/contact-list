@@ -1,0 +1,12 @@
+<header class="page-header">
+  <h1>{{ title }}</h1>
+  <div class="header-actions">
+    <button class="btn sort-btn" (click)="toggleSort()">
+      Sort {{ getSortIndicator() }}
+    </button>
+    <ng-content select="[header-actions]"></ng-content>
+    <button class="tab-btn" (click)="toggleFavoritesView()" [class.active]="showFavoritesOnly()">
+      {{ showFavoritesOnly() ? 'Show All' : 'Show Favorites' }}
+    </button>
+  </div>
+</header>

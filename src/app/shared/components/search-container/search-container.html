@@ -1,0 +1,8 @@
+<label for="search-input" class="search-label">Search Contacts</label>
+<input 
+  id="search-input" 
+  type="text" 
+  placeholder="Search by name, mobile, email, or ID..."
+  (input)="onInput($event.target.value)"
+  class="search-input"
+/>

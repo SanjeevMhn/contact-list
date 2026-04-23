@@ -4,10 +4,13 @@ import { RouterLink } from '@angular/router';
 import { ContactsService } from '../../services/contacts.service';
 import { Contact } from '../../models/contact.model';
 import { ToastrService } from 'ngx-toastr';
+import { PageHeader } from '../../shared/components/page-header/page-header';
+import { SearchContainer } from '../../shared/components/search-container/search-container';
+import { ContactItem } from '../../shared/components/contact-item/contact-item';
 
 @Component({
   selector: 'app-contact-list-page',
-  imports: [RouterLink],
+  imports: [RouterLink, PageHeader, SearchContainer, ContactItem],
   templateUrl: './contact-list.page.html',
   styleUrl: './contact-list.page.css'
 })

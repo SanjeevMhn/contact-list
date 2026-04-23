@@ -7,6 +7,9 @@ import { ContactListPage } from './contact-list.page';
 import { ContactsService } from '../../services/contacts.service';
 import { ToastrService } from 'ngx-toastr';
 import { Contact } from '../../models/contact.model';
+import { PageHeader } from '../../shared/components/page-header/page-header';
+import { SearchContainer } from '../../shared/components/search-container/search-container';
+import { ContactItem } from '../../shared/components/contact-item/contact-item';
 
 describe('ContactListPage', () => {
   const contactsServiceMock = {
@@ -22,14 +25,14 @@ describe('ContactListPage', () => {
     contactsServiceMock.toggleFavorite.mockReset();
     toastrMock.success.mockReset();
 
-    await TestBed.configureTestingModule({
-      imports: [ContactListPage],
-      providers: [
-        provideRouter([]),
-        { provide: ContactsService, useValue: contactsServiceMock },
-        { provide: ToastrService, useValue: toastrMock }
-      ]
-    }).compileComponents();
+await TestBed.configureTestingModule({
+       imports: [ContactListPage, PageHeader, SearchContainer, ContactItem],
+       providers: [
+         provideRouter([]),
+         { provide: ContactsService, useValue: contactsServiceMock },
+         { provide: ToastrService, useValue: toastrMock }
+       ]
+     }).compileComponents();
   });
 
   it('should create', () => {
