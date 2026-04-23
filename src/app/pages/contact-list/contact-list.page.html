@@ -1,46 +1,27 @@
 <section class="page">
-  <header class="page-header">
-    <h1>Latest Contacts</h1>
-    <div class="header-actions">
-      <button class="btn sort-btn" (click)="toggleSort()">
+  <app-page-header title="Latest Contacts" (sortToggled)="toggleSort()" (favoritesViewToggled)="toggleFavoritesView()">
+    <div header-actions>
+      <button class="btn sort-btn">
         Sort {{ getSortIndicator() }}
       </button>
-      <div class="header-actions">
       <a class="btn" routerLink="/contacts/new">Add Contact</a>
-    </div>
-      <button class="tab-btn" (click)="toggleFavoritesView()" [class.active]="showFavoritesOnly()">
+      <button class="tab-btn" [class.active]="showFavoritesOnly()">
         {{ showFavoritesOnly() ? 'Show All' : 'Show Favorites' }}
       </button>
     </div>
-  </header>
+  </app-page-header>
   
-  <div class="search-container">
-    <label for="search-input" class="search-label">Search Contacts</label>
-    <input 
-      id="search-input" 
-      type="text" 
-      placeholder="Search by name, mobile, email, or ID..."
-      (input)="setSearchTerm($event.target.value)"
-      class="search-input"
-    />
-  </div>
+  <app-search-container (inputChanged)="setSearchTerm($event)" />
 
    @if (filteredContacts().length === 0) {
-     <p class="empty">No contacts found matching your search.</p>
+    <p class="empty">No contacts found matching your search.</p>
    } @else {
-     <ul class="list">
-       @for (contact of sortedContacts(); track contact.id) {
-         <li class="contact-item">
-           <div class="contact-content">
-             <span class="favorite-icon" (click)="toggleFavorite(contact)" [class.active]="contact.favorite">
-               ★
-             </span>
-             <a class="contact-link" [routerLink]="['/contacts', contact.id]">
-               {{ contact.name }}
-             </a>
-           </div>
-         </li>
-       }
-     </ul>
+    <ul class="list">
+      @for (contact of sortedContacts(); track contact.id) {
+        <li class="contact-item">
+          <app-contact-item [contact]="contact" (favoriteToggled)="toggleFavorite($event)" />
+        </li>
+      }
+    </ul>
    }
 </section>
